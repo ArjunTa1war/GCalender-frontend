@@ -1,25 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+} from "react-router-dom";
+import Navbar from './components/Navbar'
+import Login from './components/login'
+import Register from './components/register'
+import Home from './components/Home';
+import Alert from './components/Alert'
+import suprsend from "@suprsend/web-sdk";
+suprsend.init(process.env.REACT_APP_WKEY,process.env.REACT_APP_WSECRET);
 
-function App() {
+export default function App() {
+  const [alert,setAlert] = React.useState(null);
+  const showAlert = (message,type)=>{
+    setAlert({
+      msg:message,
+      type:type
+    })
+    setTimeout(()=>{
+      setAlert(null);
+    },1500);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Router>
+      <Navbar showAlert={showAlert}/>
+      <Alert alert={alert}/>
+      <Routes>
+       <Route exact path="/" element = {<Home showAlert={showAlert}/>} />
+       <Route exact path="/login" element = {<Login showAlert={showAlert}/>} />
+       <Route exact path="/signup" element = {<Register showAlert={showAlert}/>} />
+      </Routes>
+    </Router>
+  )
 }
-
-export default App;
