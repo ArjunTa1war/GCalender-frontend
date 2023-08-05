@@ -152,7 +152,7 @@ export default function Home(props) {
       <div className='demo-app-sidebar'>
         <div className='demo-app-sidebar-section'>
           <div className="container3 my-3">
-            <a className="github" href="https://github.com/SuprSend-NotificationAPI/Suprsend-DoodleDocs"  target="_blank"></a>
+            <a className="github" href="https://github.com/SuprSend-NotificationAPI/Suprsend-DoodleCalender"  target="_blank"></a>
             <a className="suprsend" href="https://www.suprsend.com"  target="_blank"></a>
           </div>
         </div>
