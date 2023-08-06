@@ -56,7 +56,7 @@ export default function Home(props) {
   const handleDateSelect = async(selectInfo) => {
     let title = prompt('Please enter a new title for your event');
     let calendarApi = selectInfo.view.calendar;
-    console.log(selectInfo);
+    // console.log(selectInfo);
     calendarApi.unselect();
     if (title) {
       const nid = createEventId();
@@ -109,7 +109,7 @@ export default function Home(props) {
   const handleConfirmationResponse = async(response) => {
     if (response) {
       const id = eventToDelete._def.extendedProps._id;
-      console.log(id);
+      // console.log(id);
       const response = await fetch(`${host}/deleteevent/${id}`,{
         method : "DELETE",
         headers :{
@@ -178,6 +178,7 @@ export default function Home(props) {
   };
 
   const [email, setEmail] = useState('');
+  const [newtitle,setnewtitle] = useState('');
 
   return (
     <div className='demo-app'>
@@ -232,8 +233,8 @@ export default function Home(props) {
     >
       
       <div style={{ textAlign: 'center' }}>
-        <h1 style={{marginBottom:"20px"}}>{eventToDelete?.title}</h1>
-        <p style={{marginBottom:"20px"}}>Share the event with your friend :</p>
+        <h1 style={{marginBottom:"40px"}}>{eventToDelete?.title}</h1>
+        <h2 style={{marginBottom:"20px"}}>Share the event with your friend :</h2>
         <input
           type="email"
           placeholder="Enter receiver's email address"
@@ -253,23 +254,22 @@ export default function Home(props) {
         {/* Share Button */}
         <button
           style={{
-            marginBottom: '30px',
+            marginBottom: '40px',
             padding: '10px 20px',
             backgroundColor: '#4285F4',
             color: '#fff',
             borderRadius: '4px',
             cursor: 'pointer',
-            width: '100%',
+            width: '30%',
           }}
           onClick={async() => {
-            const id = eventToDelete._def.extendedProps._id;
             const response = await fetch(`${host}/shareevent`, {
               method: "POST",
               headers: {
                 'Content-Type': 'application/json',
                 "auth-token": localStorage.getItem('token')
               },
-              body: JSON.stringify({ share:email, eventid:id})
+              body: JSON.stringify({ share:email, eventid:eventToDelete._def.extendedProps._id})
             });
             const json = await response.json();
             if(!json.success){
@@ -283,6 +283,52 @@ export default function Home(props) {
         >
           Share
         </button>
+
+
+        <h2 style={{marginBottom:"20px"}}>Edit Title of the Event :</h2>
+        <input
+          type="text"
+          placeholder="Enter New Title"
+          value={newtitle}
+          onChange={(e) => setnewtitle(e.target.value)}
+          style={{
+            marginBottom: '20px',
+            padding: '10px',
+            fontSize: '16px',
+            borderRadius: '4px',
+            border: '1px solid #ddd',
+            width: '100%',
+            boxSizing: 'border-box',
+          }}
+        />
+
+        <button
+          style={{
+            marginBottom: '40px',
+            padding: '10px 20px',
+            backgroundColor: '#4285F4',
+            color: '#fff',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            width: '30%',
+          }}
+          onClick={async() => {
+            const response = await fetch(`${host}/editevent/${eventToDelete._def.extendedProps._id}`, {
+              method: "POST",
+              headers: {
+                'Content-Type': 'application/json',
+                "auth-token": localStorage.getItem('token')
+              },
+              body: JSON.stringify({ title : newtitle})
+            });
+            const json = await response.json();
+            setnewtitle('');
+            window.location.reload();
+          }}
+        >
+          Edit
+        </button>
+
 
         {/* Confirmation Message */}
         <h2 style={{ color: '#555', marginBottom: '20px' }}>Delete the event</h2>
